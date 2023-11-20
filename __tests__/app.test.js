@@ -12,9 +12,9 @@ afterAll(() => {
     return db.end();
 });
 
-describe('GET /api', () => {
+describe('GET /api/healthcheck', () => {
     test('should return a 200 status code', () => {
-        return request(app).get('/api').expect(200);
+        return request(app).get('/api/healthcheck').expect(200);
     });
 });
 describe('GET /api/topics', () => {
