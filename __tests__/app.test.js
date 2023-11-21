@@ -3,6 +3,7 @@ const app = require('../app');
 const seed = require('../db/seeds/seed');
 const db = require('../db/connection');
 const topics = require('../db/data/test-data');
+const endpoints = require('../endpoints.json')
 
 beforeEach(() => {
     return seed(topics);
@@ -12,12 +13,9 @@ afterAll(() => {
     return db.end();
 });
 describe('hits the /api endoint', () => {
-    test('should return a 200 status code', () => {
-        return request(app).get('/api').expect(200);
-    });
-    test("should return an object describing all available endpoints", () => {
-        return request(app).get('/api').then(({body}) => {
-            expect(body).toBe(body)
+    test('should return an object describing all available endpoints', () => {
+        return request(app).get('/api').expect(200).then(({body}) => {
+            expect(body).toEqual(endpoints)
         })
     })
 })
