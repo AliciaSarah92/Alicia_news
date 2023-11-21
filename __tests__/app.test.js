@@ -38,3 +38,8 @@ describe('GET /api/topics', () => {
         return request(app).get('/api/topiqs').expect(404);
     });
 });
+describe('GET /api/articles', () => {
+    test('should return a 200 status code', () => {
+        return request(app).get('/api/articles').expect(200);
+    });
+})
