@@ -6,15 +6,12 @@ exports.getArticles = (req, res) => {
     });
 };
 
-exports.getArticle = (req, res) => {
+exports.getArticle = (req, res, next) => {
     const { article_id } = req.params;
-    if (isNaN(article_id)) {
-        res.status(400).send({ msg: 'bad request' });
-    }
-    selectArticle(article_id).then(article => {
-        if (!article) {
-            res.status(404).send({ msg: 'record does not exist' });
-        }
-        res.status(200).send(article);
-    });
+
+    selectArticle(article_id)
+        .then(article => {
+            res.status(200).send(article);
+        })
+        .catch(next);
 };
