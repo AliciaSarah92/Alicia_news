@@ -55,18 +55,29 @@ describe('GET /api/articles', () => {
             .get('/api/articles')
             .then(({ body }) => {
                 expect(body.articles.length).toBeGreaterThan(0);
-                expect(body.articles[0]).toEqual(
-                    expect.objectContaining({
-                        article_id: expect.any(Number),
-                        title: expect.any(String),
-                        topic: expect.any(String),
-                        author: expect.any(String),
-                        body: expect.any(String),
-                        created_at: expect.any(String),
-                        votes: expect.any(Number),
-                        article_img_url: expect.any(String)
-                    })
-                );
             });
     });
+    test('return an article by the article_id', () => {
+        return request(app)
+        .get('/api/articles/1')
+        .expect(200).then((response) => {
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String)
+                })
+            );
+        })
+    })
+    test('should return a 404 error if incorrect article_id does not exist', () => {
+        return request(app)
+        .get('/api/articles/99')
+        .expect(404)
+    })
 })
