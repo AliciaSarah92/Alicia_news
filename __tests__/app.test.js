@@ -2,10 +2,11 @@ const request = require('supertest');
 const app = require('../app');
 const seed = require('../db/seeds/seed');
 const db = require('../db/connection');
-const topics = require('../db/data/test-data');
+const testData = require('../db/data/test-data');
+
 
 beforeEach(() => {
-    return seed(topics);
+    return seed(testData);
 });
 
 afterAll(() => {
@@ -41,5 +42,24 @@ describe('GET /api/topics', () => {
 describe('GET /api/articles', () => {
     test('should return a 200 status code', () => {
         return request(app).get('/api/articles').expect(200);
+    });
+    test('returns an array of article objects', () => {
+        return request(app)
+            .get('/api/articles')
+            .then(({ body }) => {
+                expect(body.articles.length).toBeGreaterThan(0);
+                expect(body.articles[0]).toEqual(
+                    expect.objectContaining({
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String)
+                    })
+                );
+            });
     });
 })
