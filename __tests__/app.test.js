@@ -11,7 +11,16 @@ beforeEach(() => {
 afterAll(() => {
     return db.end();
 });
-
+describe('hits the /api endoint', () => {
+    test('should return a 200 status code', () => {
+        return request(app).get('/api').expect(200);
+    });
+    test("should return an object describing all available endpoints", () => {
+        return request(app).get('/api').then(({body}) => {
+            expect(body).toBe(body)
+        })
+    })
+})
 describe('GET /api/healthcheck', () => {
     test('should return a 200 status code', () => {
         return request(app).get('/api/healthcheck').expect(200);

@@ -1,5 +1,6 @@
 const express = require('express');
 const { getTopics } = require('./controllers/topics.controller');
+const endpoints = require('./endpoints.json')
 
 const app = express();
 
@@ -9,7 +10,9 @@ app.get('/api/healthcheck', (req, res) => {
     res.status(200).send({ msg: 'Welcome to Alicia News' });
 });
 
-app.get('/api', (req, res) => {});
+app.get('/api', (req, res) => {
+res.status(200).send(endpoints)
+});
 
 app.get('/api/topics', getTopics);
 
