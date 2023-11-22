@@ -108,6 +108,12 @@ describe('GET /api/articles', () => {
                 });
             });
     });
+    test('should ensure that the articles are sorted by date in descending order', () => {
+        return request(app)
+        .get('/api/articles').then(({body}) => {
+            expect(body.articles).toBeSortedBy('created_at', {descending: true})
+        })
+    })
     test('should return a 404 error if route does not exist', () => {
         return request(app)
             .get('/api/articlez')
