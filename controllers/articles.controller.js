@@ -1,10 +1,4 @@
-const { selectArticles, selectArticle } = require('../models/articles.model');
-
-exports.getArticles = (req, res) => {
-    selectArticles().then(response => {
-        res.status(200).send({ articles: response });
-    });
-};
+const { selectArticles, selectArticle, selectComments, selectArticlesWithoutBody } = require('../models/articles.model');
 
 exports.getArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -15,3 +9,13 @@ exports.getArticle = (req, res, next) => {
         })
         .catch(next);
 };
+
+exports.getArticles = (req, res) => {
+    selectArticlesWithoutBody().then(response => {
+        res.status(200).send({ articles: response });
+    });
+};
+
+exports.getComments = (req, res, next) => {
+
+}

@@ -13,6 +13,7 @@ app.get('/api', getApi);
 app.get('/api/topics', getTopics);
 app.get('/api/articles', getArticles);
 app.get('/api/articles/:article_id', getArticle)
+// app.get('/api/articles/:article_id/comments', getComments)
 
 app.get('*', Four0Four);
 
