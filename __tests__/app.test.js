@@ -143,6 +143,13 @@ describe('GET /api/articles/:article_id/comments', () => {
                     }) 
                 });
             });
+            
+    })
+    test('should ensure that the comments are sorted by date in descending order', () => {
+        return request(app)
+        .get('/api/articles/3/comments').then(({body}) => {
+            expect(body.comments).toBeSortedBy('created_at', {descending: true})
+        })
     })
     test('should return a 400 error if no article_id', () => {
         return request(app)

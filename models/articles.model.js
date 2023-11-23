@@ -47,7 +47,7 @@ exports.selectComments = article_id => {
     if (isNaN(article_id)) {
         return Promise.reject({ status: 400, msg: 'bad request' });
     }
-    return db.query('SELECT * FROM comments WHERE article_id = $1;', [article_id])
+    return db.query('SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC;', [article_id])
         .then(data => {
             if (!data.rows.length) {
                 return Promise.reject({ status: 404, msg: 'record does not exist' });
