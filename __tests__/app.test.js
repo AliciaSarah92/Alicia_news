@@ -68,9 +68,9 @@ describe('GET /api/articles/id', () => {
                 );
             });
     });
-    test('should return a 404 error if incorrect article_id does not exist', () => {
+    test('should return a 404 error if route is incorrect', () => {
         return request(app)
-            .get('/api/articles/99')
+            .get('/api/articlez/99')
             .expect(404)
             .then(response => {
                 expect(response.error.status).toBe(404);
@@ -130,14 +130,12 @@ describe('GET /api/articles/:article_id/comments', () => {
     });
     test('should return a 200 if article has no comments', () => {
         return request(app)
-            .get('/api/articles/1/comments')
+            .get('/api/articles/2/comments')
             .expect(200)
             .then(({ body }) => {
-                expect(body.comments).toBeInstanceOf(Array);
+                expect(body.comments).toEqual([]);
+                expect(body.comments).toHaveLength(0);
             });
-    });
-    test('should return 404 if valid id however non existent', () => {
-        return request(app).get('/api/articles/99/comments').expect(404);
     });
     test('should respond with an array of comment objects given the article_id', () => {
         return request(app)

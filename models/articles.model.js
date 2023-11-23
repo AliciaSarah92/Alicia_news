@@ -4,15 +4,9 @@ exports.selectArticle = article_id => {
     return db
         .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
         .then(data => {
-            if (!data.rows.length) {
-                return Promise.reject({ status: 404, msg: 'record does not exist' });
-            }
             return data.rows[0];
         })
         .catch(error => {
-            if (error.code === '22P02') {
-                return Promise.reject({ status: 400, msg: 'bad request' });
-            }
             throw error;
         });
 };
@@ -53,16 +47,9 @@ exports.selectComments = article_id => {
     return db
         .query('SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC;', [article_id])
         .then(data => {
-            if (!data.rows.length) {
-                return Promise.reject({ status: 404, msg: 'record does not exist' });
-            }
             return data.rows;
         })
         .catch(error => {
-            if (error.code === '22P02') {
-                return Promise.reject({ status: 400, msg: 'bad request' });
-            }
-
             throw error;
         });
 };
