@@ -1,21 +1,14 @@
 const db = require('../db/connection');
 
 exports.selectArticle = article_id => {
-    if (isNaN(article_id)) {
-        return Promise.reject({ status: 400, msg: 'bad request' });
-    }
-    return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id]).then(data => {
-        if (!data.rows.length) {
-            return Promise.reject({ status: 404, msg: 'record does not exist' });
-        }
-        return data.rows[0];
-    });
-};
-
-exports.selectComments = () => {
-    return db.query(`SELECT * FROM comments WHERE article_id = $1;`[article_id]).then(data => {
-        return data.rows;
-    });
+    return db
+        .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
+        .then(data => {
+            return data.rows[0];
+        })
+        .catch(error => {
+            throw error;
+        });
 };
 
 exports.selectArticles = () => {
@@ -47,5 +40,16 @@ ORDER BY
         )
         .then(data => {
             return data.rows;
+        });
+};
+
+exports.selectComments = article_id => {
+    return db
+        .query('SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC;', [article_id])
+        .then(data => {
+            return data.rows;
+        })
+        .catch(error => {
+            throw error;
         });
 };
