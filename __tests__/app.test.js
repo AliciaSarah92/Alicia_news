@@ -127,6 +127,15 @@ describe('GET /api/articles/:article_id/comments', () => {
     test('should return a 200 status code', () => {
         return request(app).get('/api/articles/3/comments').expect(200);
     })
+    test('should return a 200 if article has no comments', () => {
+        return request(app).get('/api/articles/1/comments').expect(200)
+        .then(({body}) => {
+            expect(body.comments).toBeInstanceOf(Array)
+        });
+    })
+    test('should return 404 if valid id however non existent', () => {
+        return request(app).get('/api/articles/99/comments').expect(404);
+    })
     test('should respond with an array of comment objects given the article_id', () => {
         return request(app)
             .get('/api/articles/3/comments')
@@ -161,7 +170,7 @@ describe('GET /api/articles/:article_id/comments', () => {
     });
     test('should return a 404 error if route does not exist', () => {
         return request(app)
-            .get('/api/articles/3/comment')
+            .get('/api/articles/3/commen')
             .expect(404)
             .then(response => {
                 expect(response.error.status).toBe(404);
