@@ -12,12 +12,6 @@ exports.selectArticle = article_id => {
     });
 };
 
-exports.selectComments = () => {
-    return db.query(`SELECT * FROM comments WHERE article_id = $1;`[article_id]).then(data => {
-        return data.rows;
-    });
-};
-
 exports.selectArticles = () => {
     return db.query(`SELECT * FROM articles;`).then(data => {
         return data.rows;
@@ -46,6 +40,18 @@ ORDER BY
   articles.created_at DESC`
         )
         .then(data => {
+            return data.rows;
+        });
+};
+exports.selectComments = article_id => {
+    if (isNaN(article_id)) {
+        return Promise.reject({ status: 400, msg: 'bad request' });
+    }
+    return db.query('SELECT * FROM comments WHERE article_id = $1;', [article_id])
+        .then(data => {
+            if (!data.rows.length) {
+                return Promise.reject({ status: 404, msg: 'record does not exist' });
+            }
             return data.rows;
         });
 };

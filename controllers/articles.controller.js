@@ -1,3 +1,5 @@
+const { response } = require('../app');
+const comments = require('../db/data/test-data/comments');
 const { selectArticles, selectArticle, selectComments, selectArticlesWithoutBody } = require('../models/articles.model');
 
 exports.getArticle = (req, res, next) => {
@@ -17,5 +19,13 @@ exports.getArticles = (req, res) => {
 };
 
 exports.getComments = (req, res, next) => {
+    const { article_id } = req.params;
 
-}
+    selectComments(article_id)
+        .then(response => {
+            res.status(200).send({comments: response});
+        })
+        .catch(next);
+};
+
+
