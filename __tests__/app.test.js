@@ -94,7 +94,7 @@ describe('GET /api/articles', () => {
             .get('/api/articles/')
             .then(({ body }) => {
                 expect(body.articles.length).toBeGreaterThan(0);
-                body.articles.forEach((article) => {
+                body.articles.forEach(article => {
                     expect.objectContaining({
                         article_id: expect.any(Number),
                         title: expect.any(String),
@@ -103,17 +103,18 @@ describe('GET /api/articles', () => {
                         created_at: expect.any(String),
                         votes: expect.any(Number),
                         article_img_url: expect.any(String),
-                        comment_count: expect.any(Number) 
-                    }) 
+                        comment_count: expect.any(Number),
+                    });
                 });
             });
     });
     test('should ensure that the articles are sorted by date in descending order', () => {
         return request(app)
-        .get('/api/articles').then(({body}) => {
-            expect(body.articles).toBeSortedBy('created_at', {descending: true})
-        })
-    })
+            .get('/api/articles')
+            .then(({ body }) => {
+                expect(body.articles).toBeSortedBy('created_at', { descending: true });
+            });
+    });
     test('should return a 404 error if route does not exist', () => {
         return request(app)
             .get('/api/articlez')
@@ -126,22 +127,24 @@ describe('GET /api/articles', () => {
 describe('GET /api/articles/:article_id/comments', () => {
     test('should return a 200 status code', () => {
         return request(app).get('/api/articles/3/comments').expect(200);
-    })
+    });
     test('should return a 200 if article has no comments', () => {
-        return request(app).get('/api/articles/1/comments').expect(200)
-        .then(({body}) => {
-            expect(body.comments).toBeInstanceOf(Array)
-        });
-    })
+        return request(app)
+            .get('/api/articles/1/comments')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.comments).toBeInstanceOf(Array);
+            });
+    });
     test('should return 404 if valid id however non existent', () => {
         return request(app).get('/api/articles/99/comments').expect(404);
-    })
+    });
     test('should respond with an array of comment objects given the article_id', () => {
         return request(app)
             .get('/api/articles/3/comments')
             .then(({ body }) => {
                 expect(body.comments.length).toBeGreaterThan(0);
-                body.comments.forEach((comment) => {
+                body.comments.forEach(comment => {
                     expect.objectContaining({
                         comment_id: expect.any(Number),
                         votes: expect.any(Number),
@@ -149,17 +152,17 @@ describe('GET /api/articles/:article_id/comments', () => {
                         author: expect.any(String),
                         body: expect.any(String),
                         article_id: expect.any(Number),
-                    }) 
+                    });
                 });
             });
-            
-    })
+    });
     test('should ensure that the comments are sorted by date in descending order', () => {
         return request(app)
-        .get('/api/articles/3/comments').then(({body}) => {
-            expect(body.comments).toBeSortedBy('created_at', {descending: true})
-        })
-    })
+            .get('/api/articles/3/comments')
+            .then(({ body }) => {
+                expect(body.comments).toBeSortedBy('created_at', { descending: true });
+            });
+    });
     test('should return a 400 error if no article_id', () => {
         return request(app)
             .get('/api/articles/9hi/comments')
@@ -176,4 +179,4 @@ describe('GET /api/articles/:article_id/comments', () => {
                 expect(response.error.status).toBe(404);
             });
     });
-})
+});

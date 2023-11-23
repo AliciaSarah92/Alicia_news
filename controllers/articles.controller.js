@@ -23,9 +23,7 @@ exports.getComments = (req, res, next) => {
 
     selectComments(article_id)
         .then(response => {
-            res.status(200).send({comments: response});
+            res.status(200).send({ comments: response });
         })
         .catch(next);
 };
-
-
