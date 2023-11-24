@@ -2,7 +2,7 @@ const express = require('express');
 const { getTopics } = require('./controllers/topics.controller');
 const { getApi, getApiHealthCheck } = require('./controllers/api.controller');
 const { Four0Four, handleCustomErrors, handlePsqlErrors, handleServerErrors } = require('./controllers/errors.controller');
-const { getArticles, getArticle, getComments } = require('./controllers/articles.controller');
+const { getArticles, getArticle, getComments, postComment } = require('./controllers/articles.controller');
 
 const app = express();
 
@@ -14,6 +14,8 @@ app.get('/api/topics', getTopics);
 app.get('/api/articles', getArticles);
 app.get('/api/articles/:article_id', getArticle);
 app.get('/api/articles/:article_id/comments', getComments);
+
+app.post('/api/articles/:article_id/comments', postComment)
 
 app.use(handleCustomErrors);
 app.use(handlePsqlErrors);

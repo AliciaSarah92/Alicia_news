@@ -178,3 +178,71 @@ describe('GET /api/articles/:article_id/comments', () => {
             });
     });
 });
+describe('POST /api/articles/:article_id/comments', () => {
+    test('201: returns the new comment, ignores unnecessary properties', async () => {
+        const {
+            body: {
+                comments: { comment },
+            },
+        } = await request(app)
+            .post('/api/articles/2/comments')
+            .send({
+                username: 'butter_bridge',
+                body: 'hi',
+                article_id: 2,
+            })
+            .expect(201);
+
+        const { rows } = comment;
+        const { body, author, comment_id, created_at, votes } = rows[0];
+
+        expect(comment).toBeInstanceOf(Object);
+        expect(body).toEqual('hi');
+        expect({
+            body,
+            author,
+            comment_id,
+            created_at,
+            votes,
+        }).toEqual(
+            expect.objectContaining({
+                comment_id: expect.any(Number),
+                author: expect.any(String),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                body: expect.any(String),
+            })
+        );
+    });
+    test('should return a 400 error if no article_id', () => {
+        return request(app)
+            .post('/api/articles/9hi/comments')
+            .expect(400)
+            .then(response => {
+                expect(response.error.status).toBe(400);
+            });
+    });
+    test('should return a 404 error if route does not exist', () => {
+        return request(app)
+            .post('/api/articles/3/commen')
+            .expect(404)
+            .then(response => {
+                expect(response.error.status).toBe(404);
+            });
+    });
+    test('should return a 404 error if the username passed does not exist', async () => {
+        const invalidUsername = 'alicia'
+
+        const response = await request(app)
+        .post('/api/articles/3/comments')
+        .send ({
+            username: 'alicia',
+            body: 'hi',
+            article_id: 2
+        })
+        .expect(404);
+
+        const {error} = response.body
+        expect(error.msg).toEqual('username not found')
+    });
+});
