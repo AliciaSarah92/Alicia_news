@@ -12,12 +12,6 @@ exports.selectArticle = article_id => {
 };
 
 exports.selectArticles = () => {
-    return db.query(`SELECT * FROM articles;`).then(data => {
-        return data.rows;
-    });
-};
-
-exports.selectArticlesWithoutBody = () => {
     return db
         .query(
             `SELECT
@@ -49,6 +43,22 @@ exports.selectComments = article_id => {
         .then(data => {
             return data.rows;
         })
+        .catch(error => {
+            throw error;
+        });
+};
+exports.createComment = newComment => {
+    const { username, body, article_id } = newComment;
+
+    const query = `INSERT INTO comments (author, article_id, body) 
+    VALUES ($1, $2, $3) 
+    RETURNING *
+    `;
+    const values = [username, article_id, body];
+
+    return db
+        .query(query, values)
+        .then(comment => ({ comment }))
         .catch(error => {
             throw error;
         });
