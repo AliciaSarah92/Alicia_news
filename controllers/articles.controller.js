@@ -1,5 +1,6 @@
 const { response } = require('../app');
 const comments = require('../db/data/test-data/comments');
+const users = require('../db/data/test-data/users');
 const { selectArticles, selectArticle, selectComments, createComment } = require('../models/articles.model');
 
 exports.getArticle = (req, res, next) => {
@@ -26,16 +27,31 @@ exports.getComments = (req, res, next) => {
             res.status(200).send({ comments: response });
         })
         .catch(next);
+
+    exports.usernameExists = async username => {
+        const user = users.find(user => user.username === username);
+        return !!user;
+    };
 };
 exports.postComment = async (req, res, next) => {
-        const { article_id } = req.params;
-        const { username, body } = req.body;
-        const newComment = { username, body, article_id };
-    
-        createComment(newComment)
-        .then((response) => {
-            res.status(201).json({comments: response})
+    const { article_id } = req.params;
+    const { username, body } = req.body;
+    const newComment = { username, body, article_id };
+
+    if (username) {
+        const validUser = await this.usernameExists(username);
+
+        if (!validUser) {
+            return res.status(404).json({
+                error: {
+                    msg: 'username not found',
+                },
+            });
+        }
+    }
+    createComment(newComment)
+        .then(response => {
+            res.status(201).json({ comments: response });
         })
-        .catch(next)
-    } 
-    
+        .catch(next);
+};

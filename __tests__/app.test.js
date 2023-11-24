@@ -230,4 +230,19 @@ describe('POST /api/articles/:article_id/comments', () => {
                 expect(response.error.status).toBe(404);
             });
     });
+    test('should return a 404 error if the username passed does not exist', async () => {
+        const invalidUsername = 'alicia'
+
+        const response = await request(app)
+        .post('/api/articles/3/comments')
+        .send ({
+            username: 'alicia',
+            body: 'hi',
+            article_id: 2
+        })
+        .expect(404);
+
+        const {error} = response.body
+        expect(error.msg).toEqual('username not found')
+    });
 });
