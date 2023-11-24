@@ -1,7 +1,7 @@
 const { response } = require('../app');
 const comments = require('../db/data/test-data/comments');
 const users = require('../db/data/test-data/users');
-const { selectArticles, selectArticle, selectComments, createComment } = require('../models/articles.model');
+const { selectArticles, selectArticle, selectComments, createComment, updateVotes } = require('../models/articles.model');
 
 exports.getArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -52,6 +52,24 @@ exports.postComment = async (req, res, next) => {
     createComment(newComment)
         .then(response => {
             res.status(201).json({ comments: response });
+        })
+        .catch(next);
+};
+exports.updatedVotes = async (req, res, next) => {
+    const { article_id } = req.params;
+    const { inc_votes } = req.body;
+
+    if (!inc_votes) {
+        return res.status(400).json({
+            error: {
+                msg: 'incrementor input needed',
+            },
+        });
+    }
+
+    updateVotes({ votes: inc_votes, article_id: article_id })
+        .then(response => {
+            res.status(201).json({ article: response });
         })
         .catch(next);
 };

@@ -231,23 +231,71 @@ describe('POST /api/articles/:article_id/comments', () => {
             });
     });
     test('should return a 404 error if the username passed does not exist', async () => {
-        const invalidUsername = 'alicia'
-
         const response = await request(app)
-        .post('/api/articles/3/comments')
-        .send ({
-            username: 'alicia',
-            body: 'hi',
-            article_id: 2
-        })
-        .expect(404);
+            .post('/api/articles/3/comments')
+            .send({
+                username: 'alicia',
+                body: 'hi',
+                article_id: 2,
+            })
+            .expect(404);
 
-        const {error} = response.body
-        expect(error.msg).toEqual('username not found')
+        const { error } = response.body;
+        expect(error.msg).toEqual('username not found');
     });
 });
 describe('PATCH /api/articles/:article_id', () => {
-    test('should update article by article_id', () => {
-        
-    })
-})
+    test('should update negative votes by article_id', async () => {
+        const newVotes = { inc_votes: -9 };
+
+        const response = await request(app).patch('/api/articles/1').send(newVotes).expect(201);
+
+        expect({
+            article_id: 1,
+            title: 'Living in the shadow of a great man',
+            topic: 'mitch',
+            author: 'butter_bridge',
+            body: 'I find this existence challenging',
+            votes: 91,
+            article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+        }).toEqual(response.body.article);
+    });
+    test('should update positive votes by article_id', async () => {
+        const newVotes = { inc_votes: 3 };
+
+        const response = await request(app).patch('/api/articles/1').send(newVotes).expect(201);
+
+        expect({
+            article_id: 1,
+            title: 'Living in the shadow of a great man',
+            topic: 'mitch',
+            author: 'butter_bridge',
+            body: 'I find this existence challenging',
+            votes: 103,
+            article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+        }).toEqual(response.body.article);
+    });
+    test('should return a 400 error if no article_id', () => {
+        return request(app)
+            .patch('/api/articles/rgreg')
+            .expect(400)
+            .then(response => {
+                expect(response.error.status).toBe(400);
+            });
+    });
+    test('should return a 400 error if no inc_votes', async () => {
+        const response = await request(app).patch('/api/articles/1').send({}).expect(400);
+        const { error } = response.body;
+
+        expect(response.error.status).toBe(400);
+        expect(error.msg).toBe('incrementor input needed');
+    });
+    test('should return a 404 error if route does not exist', () => {
+        return request(app)
+            .patch('/api/articlez/1')
+            .expect(404)
+            .then(response => {
+                expect(response.error.status).toBe(404);
+            });
+    });
+});
