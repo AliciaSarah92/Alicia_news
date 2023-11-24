@@ -53,3 +53,19 @@ exports.selectComments = article_id => {
             throw error;
         });
 };
+exports.createComment = newComment => {
+    const { username, body, article_id } = newComment;
+
+    const query = `INSERT INTO comments (author, article_id, body) 
+    VALUES ($1, $2, $3) 
+    RETURNING *
+    `;
+    const values = [username, article_id, body];
+
+    return db
+        .query(query, values)
+        .then(comment => ({ comment }))
+        .catch(error => {
+            throw error;
+        });
+};

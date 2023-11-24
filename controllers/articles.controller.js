@@ -1,6 +1,6 @@
 const { response } = require('../app');
 const comments = require('../db/data/test-data/comments');
-const { selectArticles, selectArticle, selectComments, selectArticlesWithoutBody } = require('../models/articles.model');
+const { selectArticles, selectArticle, selectComments, selectArticlesWithoutBody, createComment } = require('../models/articles.model');
 
 exports.getArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -27,3 +27,15 @@ exports.getComments = (req, res, next) => {
         })
         .catch(next);
 };
+exports.postComment = async (req, res, next) => {
+        const { article_id } = req.params;
+        const { username, body } = req.body;
+        const newComment = { username, body, article_id };
+    
+        createComment(newComment)
+        .then((response) => {
+            res.status(201).json({comments: response})
+        })
+        .catch(next)
+    } 
+    
