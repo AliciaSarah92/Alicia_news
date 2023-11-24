@@ -12,12 +12,6 @@ exports.selectArticle = article_id => {
 };
 
 exports.selectArticles = () => {
-    return db.query(`SELECT * FROM articles;`).then(data => {
-        return data.rows;
-    });
-};
-
-exports.selectArticlesWithoutBody = () => {
     return db
         .query(
             `SELECT

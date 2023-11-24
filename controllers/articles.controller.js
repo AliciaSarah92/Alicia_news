@@ -1,6 +1,6 @@
 const { response } = require('../app');
 const comments = require('../db/data/test-data/comments');
-const { selectArticles, selectArticle, selectComments, selectArticlesWithoutBody, createComment } = require('../models/articles.model');
+const { selectArticles, selectArticle, selectComments, createComment } = require('../models/articles.model');
 
 exports.getArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -13,7 +13,7 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res) => {
-    selectArticlesWithoutBody().then(response => {
+    selectArticles().then(response => {
         res.status(200).send({ articles: response });
     });
 };
