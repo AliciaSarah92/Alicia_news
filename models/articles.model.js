@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const comments = require('../db/data/test-data/comments');
 
 exports.selectArticle = article_id => {
     return db
@@ -62,4 +63,19 @@ exports.createComment = newComment => {
         .catch(error => {
             throw error;
         });
+};
+exports.updateVotes = async newVotes => {
+    const { votes, article_id } = newVotes;
+    let votesCount = 0;
+
+    const article = await this.selectArticle(article_id);
+    if (votes < 0) {
+        votesCount = article.votes += votes;
+    } else {
+        votesCount = article.votes + votes;
+    }
+
+    return db.query(`UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING article_id, title, topic, author, body, votes, article_img_url;`, [votesCount, article_id]).then(({ rows }) => {
+        return rows[0];
+    });
 };
