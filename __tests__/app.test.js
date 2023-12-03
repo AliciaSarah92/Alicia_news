@@ -348,4 +348,48 @@ describe('GET /api/users', () => {
                 expect(response.error.status).toBe(404);
             });
     });
-})
+});
+describe('GET /api/articles (topic query)', () => {
+    test('should return a 200 status code', () => {
+        return request(app).get('/api/articles?topic=mitch').expect(200);
+    });
+    test('should return a 200 with an empty array if no topics exist', () => {
+        return request(app)
+            .get('/api/articles?topic=not-a-topic')
+            .expect(200)
+            .then(response => {
+                expect(response.status).toBe(200)
+                expect(response.body.articles).toEqual([]);
+            });
+    });
+    test('returns an array of article objects filtered by topic', () => {
+        return request(app)
+            .get('/api/articles?topic=mitch')
+            .then(({ body }) => {
+                expect(body.articles.length).toBeGreaterThan(0);
+                body.articles.forEach(article => {
+                    expect.objectContaining({
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                    });
+                });
+            });
+    });
+    test('should return a 404 error if route does not exist', () => {
+        return request(app)
+            .get('/api/articlez?topic=mitch')
+            .expect(404)
+            .then(response => {
+                expect(response.error.status).toBe(404);
+            });
+    });
+    test('should return a 400 error if topic is mispelt', () => {
+        return request(app)
+            .get('/api/articles?dopic=mitch')
+            .expect(400)
+            .then(response => {
+                expect(response.error.status).toBe(400);
+            });
+    });
+});

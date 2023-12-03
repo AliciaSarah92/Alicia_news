@@ -14,7 +14,15 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res) => {
-    selectArticles().then(response => {
+    if (Object.keys(req.query).length && !req.query['topic']) {
+        return res.status(400).json({
+            error: {
+                msg: 'invalid query',
+            },
+        });
+    }
+    const { topic } = req.query;
+    selectArticles(topic).then(response => {
         res.status(200).send({ articles: response });
     });
 };
@@ -76,7 +84,7 @@ exports.updatedVotes = async (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
     const { comment_id } = req.params;
-    
+
     if (!comment_id) {
         return res.status(400).json({
             error: {
@@ -90,4 +98,4 @@ exports.deleteComment = (req, res, next) => {
             res.status(204).json({ comment: response });
         })
         .catch(next);
-}
+};
