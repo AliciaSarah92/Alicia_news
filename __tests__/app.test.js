@@ -299,3 +299,26 @@ describe('PATCH /api/articles/:article_id', () => {
             });
     });
 });
+describe('DELETE /api/comments/:comment_id', () => {
+    test('should delete comment by comment_id', async () => {
+        const response = await request(app).delete('/api/comments/1').expect(204);
+
+        expect(response.body).toEqual({});
+    });
+    test('should return a 404 error if route does not exist', () => {
+        return request(app)
+            .delete('/api/commentz/1')
+            .expect(404)
+            .then(response => {
+                expect(response.error.status).toBe(404);
+            });
+    });
+    test('should return a 400 error if comment_id does not exist', () => {
+        return request(app)
+            .delete('/api/comments/hi')
+            .expect(400)
+            .then(response => {
+                expect(response.error.status).toBe(400);
+            });
+    });
+});

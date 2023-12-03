@@ -1,7 +1,7 @@
 const { response } = require('../app');
 const comments = require('../db/data/test-data/comments');
 const users = require('../db/data/test-data/users');
-const { selectArticles, selectArticle, selectComments, createComment, updateVotes } = require('../models/articles.model');
+const { selectArticles, selectArticle, selectComments, createComment, updateVotes, deleteComment } = require('../models/articles.model');
 
 exports.getArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -73,3 +73,21 @@ exports.updatedVotes = async (req, res, next) => {
         })
         .catch(next);
 };
+
+exports.deleteComment = (req, res, next) => {
+    const { comment_id } = req.params;
+    
+    if (!comment_id) {
+        return res.status(400).json({
+            error: {
+                msg: 'incrementor input needed',
+            },
+        });
+    }
+
+    deleteComment(comment_id)
+        .then(response => {
+            res.status(204).json({ comment: response });
+        })
+        .catch(next);
+}
