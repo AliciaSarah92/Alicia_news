@@ -1,5 +1,3 @@
-const { response } = require('../app');
-const comments = require('../db/data/test-data/comments');
 const users = require('../db/data/test-data/users');
 const { selectArticles, selectArticle, selectComments, createComment, updateVotes, deleteComment } = require('../models/articles.model');
 

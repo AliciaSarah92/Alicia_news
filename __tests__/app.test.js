@@ -393,3 +393,44 @@ describe('GET /api/articles (topic query)', () => {
             });
     });
 });
+describe('GET /api/articles/:article_id (comment_count)', () => {
+    test('should return a 200 status code', () => {
+        return request(app).get('/api/articles/1').expect(200);
+    });
+    test('return an article with comment_count by the article_id', () => {
+        return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then(response => {
+                expect(response.body).toEqual(
+                    expect.objectContaining({
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String),
+                        comment_count: expect.any(String),
+                    })
+                );
+            });
+    });
+    test('should return a 404 error if route does not exist', () => {
+        return request(app)
+            .get('/api/articlez/1')
+            .expect(404)
+            .then(response => {
+                expect(response.error.status).toBe(404);
+            });
+    });
+    test('should return a 400 error if invalid article_id', () => {
+        return request(app)
+            .get('/api/articles/9hi')
+            .expect(400)
+            .then(response => {
+                expect(response.error.status).toBe(400);
+            });
+    });
+})
