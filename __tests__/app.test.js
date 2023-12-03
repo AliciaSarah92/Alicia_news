@@ -322,3 +322,30 @@ describe('DELETE /api/comments/:comment_id', () => {
             });
     });
 });
+describe('GET /api/users', () => {
+    test('should return a 200 status code', () => {
+        return request(app).get('/api/users').expect(200);
+    });
+    test('returns an array of user objects', () => {
+        return request(app)
+            .get('/api/users')
+            .then(({ body }) => {
+                expect(body.users.length).toBeGreaterThan(0);
+                body.users.forEach(user => {
+                    expect.objectContaining({
+                        username: expect.any(String),
+                        avatar_url: expect.any(String),
+                        name: expect.any(String),
+                    });
+                });
+            });
+    });
+    test('should return a 404 error if route does not exist', () => {
+        return request(app)
+            .get('/api/userz')
+            .expect(404)
+            .then(response => {
+                expect(response.error.status).toBe(404);
+            });
+    });
+})

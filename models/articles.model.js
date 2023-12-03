@@ -1,5 +1,4 @@
 const db = require('../db/connection');
-const comments = require('../db/data/test-data/comments');
 
 exports.selectArticle = article_id => {
     return db
@@ -75,11 +74,10 @@ exports.updateVotes = async newVotes => {
         votesCount = article.votes + votes;
     }
 
-    return db.query(`UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING article_id, title, topic, author, body, votes, article_img_url;`, [votesCount, article_id])
-    .then(({ rows }) => {
+    return db.query(`UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING article_id, title, topic, author, body, votes, article_img_url;`, [votesCount, article_id]).then(({ rows }) => {
         return rows[0];
     });
 };
 exports.deleteComment = comment_id => {
-    return db.query(`DELETE FROM comments WHERE comment_id = $1`, [comment_id])
-}
+    return db.query(`DELETE FROM comments WHERE comment_id = $1`, [comment_id]);
+};
