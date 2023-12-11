@@ -4,10 +4,12 @@ const { getApi, getApiHealthCheck } = require('./controllers/api.controller');
 const { Four0Four, handleCustomErrors, handlePsqlErrors, handleServerErrors } = require('./controllers/errors.controller');
 const { getArticles, getArticle, updatedVotes, getComments, postComment, deleteComment } = require('./controllers/articles.controller');
 const { getUsers } = require('./controllers/users.controller'); 
+const cors = require('cors');
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/api/healthcheck', getApiHealthCheck);
 app.get('/api', getApi);
