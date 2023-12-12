@@ -33,12 +33,13 @@ exports.getComments = (req, res, next) => {
             res.status(200).send({ comments: response });
         })
         .catch(next);
-
-    exports.usernameExists = async username => {
-        const user = users.find(user => user.username === username);
-        return !!user;
-    };
 };
+
+exports.usernameExists = async username => {
+    const user = users.find(user => user.username === username);
+    return !!user;
+};
+
 exports.postComment = async (req, res, next) => {
     const { article_id } = req.params;
     const { username, body } = req.body;
