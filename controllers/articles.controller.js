@@ -40,15 +40,13 @@ exports.usernameExists = async username => {
     return !!user;
 };
 
-exports.postComment = (req, res, next) => {
+exports.postComment = async (req, res, next) => {
     const { article_id } = req.params;
     const { username, body } = req.body;
     const newComment = { username, body, article_id };
-    console.log(username)
 
     if (username) {
-        const validUser = this.usernameExists(username);
-        console.log(validUser)
+        const validUser = await this.usernameExists(username);
         if (!validUser) {
             return res.status(404).json({
                 error: {
