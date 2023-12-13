@@ -1,6 +1,5 @@
 const users = require('../db/data/test-data/users');
 const { selectArticles, selectArticle, selectComments, createComment, updateVotes, deleteComment } = require('../models/articles.model');
-const db = require('../db/connection');
 
 exports.getArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -48,10 +47,6 @@ exports.postComment = async (req, res, next) => {
     console.log(username)
 
     if (username) {
-        const user = db.query(`SELECT * FROM users WHERE username = $1;`, [username]).then((data) => {
-            return data.rows;
-        });
-        console.log(user)
         const validUser = await this.usernameExists(username);
         console.log(validUser)
         if (!validUser) {
