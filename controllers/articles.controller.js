@@ -1,4 +1,4 @@
-const users = require('../db/data/test-data/users');
+const { selectUser } = require('../models/users.model');
 const { selectArticles, selectArticle, selectComments, createComment, updateVotes, deleteComment } = require('../models/articles.model');
 
 exports.getArticle = (req, res, next) => {
@@ -36,8 +36,9 @@ exports.getComments = (req, res, next) => {
 };
 
 exports.usernameExists = async username => {
-    console.log(username, '<<<<username')
-    const user = users.find(user => user.username === username);
+    const user = await selectUser(username).then((user)=> {
+        return user
+    });
     return !!user;
 };
 
@@ -45,13 +46,9 @@ exports.postComment = async (req, res, next) => {
     const { article_id } = req.params;
     const { username, body } = req.body;
     const newComment = { username, body, article_id };
-    console.log(username, '<<<<username')
-    console.log(newComment, '<<<<newComment')
-    console.log(req.body, '<<<<req.body')
 
     if (username) {
         const validUser = await this.usernameExists(username);
-        console.log(validUser, '<<<<validUser')
         if (!validUser) {
             return res.status(404).json({
                 error: {
