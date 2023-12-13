@@ -36,6 +36,7 @@ exports.getComments = (req, res, next) => {
 };
 
 exports.usernameExists = async username => {
+    console.log(username, '<<<<username')
     const user = users.find(user => user.username === username);
     return !!user;
 };
@@ -44,11 +45,13 @@ exports.postComment = async (req, res, next) => {
     const { article_id } = req.params;
     const { username, body } = req.body;
     const newComment = { username, body, article_id };
-    console.log(username)
+    console.log(username, '<<<<username')
+    console.log(newComment, '<<<<newComment')
+    console.log(req.body, '<<<<req.body')
 
     if (username) {
         const validUser = await this.usernameExists(username);
-        console.log(validUser)
+        console.log(validUser, '<<<<validUser')
         if (!validUser) {
             return res.status(404).json({
                 error: {
