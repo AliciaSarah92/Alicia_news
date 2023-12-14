@@ -51,10 +51,10 @@ exports.selectArticles = data => {
         articles.topic = $1 `;
     }
     if(sort_by) {
-        query += `ORDER BY ${sort_by} ${order || 'DESC'}`;
+        query += `ORDER BY ${sort_by} ${order || 'DESC'} `;
     }
     if(order) {
-        query += `ORDER BY ${sort_by || 'created_at'} ${order}`;
+        query += `ORDER BY ${sort_by || 'created_at'} ${order} `;
     }
 
     query += `GROUP BY
