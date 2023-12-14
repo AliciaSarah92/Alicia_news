@@ -2,7 +2,8 @@ const db = require('../db/connection');
 
 exports.selectArticle = article_id => {
     return db
-        .query(`SELECT
+        .query(
+            `SELECT
         articles.article_id,
         articles.author,
         articles.body,
@@ -16,7 +17,9 @@ exports.selectArticle = article_id => {
         articles
       LEFT JOIN
         comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY
-        articles.article_id;`, [article_id])
+        articles.article_id;`,
+            [article_id]
+        )
         .then(data => {
             return data.rows[0];
         })
@@ -25,8 +28,9 @@ exports.selectArticle = article_id => {
         });
 };
 
-exports.selectArticles = topic => {
-    let params = []
+exports.selectArticles = data => {
+    const { topic, sort_by, order } = data;
+    let params = [];
     let query = `SELECT
     articles.article_id,
     articles.author,
@@ -46,6 +50,13 @@ exports.selectArticles = topic => {
         query += `WHERE
         articles.topic = $1 `;
     }
+    if(sort_by) {
+        query += `ORDER BY ${sort_by} ${order || 'DESC'}`;
+    }
+    if(order) {
+        query += `ORDER BY ${sort_by || 'created_at'} ${order}`;
+    }
+
     query += `GROUP BY
     articles.article_id
   ORDER BY

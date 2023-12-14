@@ -19,8 +19,8 @@ exports.getArticles = (req, res) => {
             },
         });
     }
-    const { topic } = req.query;
-    selectArticles(topic).then(response => {
+    const { topic, sort_by, order } = req.query;
+    selectArticles({ topic, sort_by, order }).then(response => {
         res.status(200).send({ articles: response });
     });
 };
