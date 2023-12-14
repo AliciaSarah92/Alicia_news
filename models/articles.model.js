@@ -29,7 +29,7 @@ exports.selectArticle = article_id => {
 };
 
 exports.selectArticles = data => {
-    const { topic, sort_by, order } = data;
+    let { topic, sort_by, order } = data;
     let params = [];
     let query = `SELECT
     articles.article_id,
@@ -53,7 +53,7 @@ exports.selectArticles = data => {
 
     query += `GROUP BY
     articles.article_id`;
-    
+
     if (sort_by && sort_by == 'date') {
         sort_by = 'created_at';
     }
