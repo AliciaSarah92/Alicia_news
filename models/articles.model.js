@@ -53,12 +53,11 @@ exports.selectArticles = data => {
     
     query += `GROUP BY
     articles.article_id`;
-
-    if(sort_by) {
-        query += ` ORDER BY articles.${sort_by} ${order || 'DESC'} `;
-    }
-    if(order) {
-        query += ` ORDER BY articles.${sort_by || 'articles.created_at'} ${order}`;
+    
+    if(order && sort_by) {
+        query += ` ORDER BY articles.${sort_by || 'articles.created_at'} ${order || 'DESC'}`;
+        params.push(sort_by);
+        params.push(order);
     }
     if(!sort_by && !order) {
         query += ` ORDER BY articles.created_at DESC`;
