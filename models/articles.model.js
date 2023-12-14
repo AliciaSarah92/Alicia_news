@@ -50,21 +50,18 @@ exports.selectArticles = data => {
         query += `WHERE
         articles.topic = $1 `;
     }
-    
+
     query += `GROUP BY
     articles.article_id`;
     
-    if(sort_by) {
-        query += ` ORDER BY articles.${sort_by} ${order || 'DESC'} `;
-        console.log(1)
+    if (sort_by && sort_by == 'date') {
+        sort_by = 'created_at';
     }
-    if(order) {
+    if (sort_by) {
         query += ` ORDER BY articles.${sort_by || 'articles.created_at'} ${order || 'DESC'}`;
-        console.log(2)
     }
-    if(!sort_by && !order) {
+    if (!sort_by && !order) {
         query += ` ORDER BY articles.created_at DESC`;
-        console.log(3)
     }
     console.log(query);
     return db.query(query, params).then(data => {
