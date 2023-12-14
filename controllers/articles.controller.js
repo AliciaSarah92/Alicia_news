@@ -12,7 +12,7 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res) => {
-    if (Object.keys(req.query).length && !req.query['topic']) {
+    if (Object.keys(req.query).length && !req.query['topic'] && !req.query['sort_by'] && !req.query['order']) {
         return res.status(400).json({
             error: {
                 msg: 'invalid query',
