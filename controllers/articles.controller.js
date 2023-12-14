@@ -12,17 +12,24 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res) => {
-    if (Object.keys(req.query).length && !req.query['topic'] && !req.query['sort_by'] && !req.query['order']) {
-        return res.status(400).json({
-            error: {
-                msg: 'invalid query',
-            },
+    if (req.query['sort_by'] && req.query['order']) {
+        const { topic, sort_by, order } = req.query;
+        selectArticles({ topic: topic, sort_by: sort_by, order: order }).then(response => {
+            res.status(200).send({ articles: response });
+        });
+    } else {
+        if (Object.keys(req.query).length && !req.query['topic']) {
+            return res.status(400).json({
+                error: {
+                    msg: 'invalid query',
+                },
+            });
+        }
+        const { topic } = req.query;
+        selectArticles({ topic:topic, sort_by: false, order: false}).then(response => {
+            res.status(200).send({ articles: response });
         });
     }
-    const { topic, sort_by, order } = req.query;
-    selectArticles({ topic, sort_by, order }).then(response => {
-        res.status(200).send({ articles: response });
-    });
 };
 
 exports.getComments = (req, res, next) => {
@@ -36,8 +43,8 @@ exports.getComments = (req, res, next) => {
 };
 
 exports.usernameExists = async username => {
-    const user = await selectUser(username).then((user)=> {
-        return user
+    const user = await selectUser(username).then(user => {
+        return user;
     });
     return !!user;
 };
