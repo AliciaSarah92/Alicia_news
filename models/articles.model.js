@@ -54,12 +54,12 @@ exports.selectArticles = data => {
     query += `GROUP BY
     articles.article_id`;
 
-    if(sort_by) {
-        query += ` ORDER BY ${sort_by} ${order || 'DESC'} `;
-    }
-    if(order) {
-        query += ` ORDER BY ${sort_by || 'created_at'} ${order}`;
-    }
+    // if(sort_by) {
+    //     query += ` ORDER BY ${sort_by} ${order || 'DESC'} `;
+    // }
+    // if(order) {
+    //     query += ` ORDER BY ${sort_by || 'created_at'} ${order}`;
+    // }
     if(!sort_by && !order) {
         query += ` ORDER BY created_at DESC`;
     }
