@@ -58,9 +58,8 @@ exports.selectArticles = data => {
         sort_by = 'created_at';
     }
     if (sort_by) {
-        query += ` ORDER BY articles.${sort_by || 'articles.created_at'} ${order || 'DESC'}`;
-    }
-    if (!sort_by && !order) {
+        query += ` ORDER BY ${sort_by === 'comment_count' ? 'comment_count' : `articles.${sort_by}`} ${order || 'DESC'}`;
+    } else {
         query += ` ORDER BY articles.created_at DESC`;
     }
     return db.query(query, params).then(data => {
