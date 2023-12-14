@@ -63,7 +63,6 @@ exports.selectArticles = data => {
     if (!sort_by && !order) {
         query += ` ORDER BY articles.created_at DESC`;
     }
-    console.log(query);
     return db.query(query, params).then(data => {
         return data.rows;
     });

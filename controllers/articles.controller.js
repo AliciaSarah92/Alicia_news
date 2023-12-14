@@ -13,7 +13,7 @@ exports.getArticle = (req, res, next) => {
 
 exports.getArticles = (req, res) => {
     if (req.query['sort_by'] && req.query['order']) {
-        const { topic, sort_by, order } = req.query;
+        let { topic, sort_by, order } = req.query;
         selectArticles({ topic: topic, sort_by: sort_by, order: order }).then(response => {
             res.status(200).send({ articles: response });
         });
@@ -25,7 +25,7 @@ exports.getArticles = (req, res) => {
                 },
             });
         }
-        const { topic } = req.query;
+        let { topic } = req.query;
         selectArticles({ topic:topic, sort_by: false, order: false}).then(response => {
             res.status(200).send({ articles: response });
         });
