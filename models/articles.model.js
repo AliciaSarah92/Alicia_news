@@ -50,17 +50,19 @@ exports.selectArticles = data => {
         query += `WHERE
         articles.topic = $1 `;
     }
+    
+    query += `GROUP BY
+    articles.article_id`;
+
     if(sort_by) {
-        query += `ORDER BY ${sort_by} ${order || 'DESC'} `;
+        query += ` ORDER BY ${sort_by} ${order || 'DESC'} `;
     }
     if(order) {
-        query += `ORDER BY ${sort_by || 'created_at'} ${order} `;
+        query += ` ORDER BY ${sort_by || 'created_at'} ${order}`;
     }
-
-    query += `GROUP BY
-    articles.article_id
-  ORDER BY
-    articles.created_at DESC`;
+    if(!sort_by && !order) {
+        query += ` ORDER BY created_at DESC`;
+    }
 
     return db.query(query, params).then(data => {
         return data.rows;
